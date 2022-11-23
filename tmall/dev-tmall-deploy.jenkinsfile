@@ -71,6 +71,7 @@ pipeline {
                 }
             }
         }
+    }
 //         stage("打包镜像") {
 //             steps {
 //                 script {
@@ -107,7 +108,6 @@ pipeline {
                     currentBuild.description += "\n提交内容: ${COMMIT_INFO}" // 添加说明信息
                 }
                 sh "printenv"
-                }
             }
         }
     }
