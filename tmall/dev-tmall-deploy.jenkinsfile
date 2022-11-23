@@ -46,10 +46,10 @@ pipeline {
                         userRemoteConfigs: [[credentialsId: 'opensource_id', url: "$APP_REPO"]]])
 
                      // 定义全局变量
-                    env.COMMIT_ID   = howlaisiEnv.getCommitId() // 提交ID
-                    env.COMMIT_USER = howlaisiEnv.getCommitUser() // 提交者
-                    env.COMMIT_TIME = howlaisiEnv.getCommitTime() // 提交时间
-                    env.COMMIT_INFO = howlaisiEnv.getCommitInfo() // 提交信息
+                    env.COMMIT_ID   = commitEnv.getCommitId() // 提交ID
+                    env.COMMIT_USER = commitEnv.getCommitUser() // 提交者
+                    env.COMMIT_TIME = commitEnv.getCommitTime() // 提交时间
+                    env.COMMIT_INFO = commitEnv.getCommitInfo() // 提交信息
                 }
                 sh "du -h --max-depth=1"
             }
