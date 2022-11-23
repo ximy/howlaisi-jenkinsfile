@@ -44,7 +44,13 @@ pipeline {
                     extensions: [[$class: 'CloneOption', depth: 1, noTags: false, reference: '', shallow: true]],
                     userRemoteConfigs: [[credentialsId: 'opensource_id', url: "$APP_REPO"]]])
                 script {
-                    env.GIT_COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                     // 定义全局变量
+                    env.PULL_TIME = sh(script: "echo `date +'%Y-%m-%d %H:%M:%S'`", returnStdout: true).trim() // 获取时间
+                    env.COMMIT_ID   = sh(script: 'git log --pretty=format:%h',  returnStdout: true).trim() // 提交ID
+                    env.COMMIT_USER = sh(script: 'git log --pretty=format:%an', returnStdout: true).trim() // 提交者
+                    env.COMMIT_TIME = sh(script: 'git log --pretty=format:%ai', returnStdout: true).trim() // 提交时间
+                    env.COMMIT_INFO = sh(script: 'git log --pretty=format:%s',  returnStdout: true).trim() // 提交信息
+                    env._VERSION = sh(script: "echo `date '+%Y%m%d%H%M%S'`" + "_${COMMIT_ID}" + "_${env.BUILD_ID}", returnStdout: true).trim() // 对应构建的版本 时间+commitID+buildID
                 }
                 sh "du -h --max-depth=1"
             }
@@ -97,7 +103,6 @@ pipeline {
                 script{
                     buildName "#${BUILD_ID}-${BRANCH_NAME}-${BUILD_USER}" // 更改构建名称
                     currentBuild.description = "提交者: ${COMMIT_USER}" // 添加说明信息
-                    currentBuild.description += "\n构建主机: ${REMOTE_HOST}" // 添加说明信息
                     currentBuild.description += "\n提交ID: ${COMMIT_ID}" // 添加说明信息
                     currentBuild.description += "\n提交时间: ${COMMIT_TIME}" // 添加说明信息
                     currentBuild.description += "\n提交内容: ${COMMIT_INFO}" // 添加说明信息
