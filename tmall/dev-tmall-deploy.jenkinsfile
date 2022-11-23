@@ -81,7 +81,6 @@ pipeline {
             }
         }
         stage("自动部署至k8s") {
-            agent none
             steps {
                 container ("maven") {
                     // 这种方式启k8s是官方推荐的
