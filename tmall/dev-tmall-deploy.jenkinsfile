@@ -49,7 +49,7 @@ pipeline {
                     env.COMMIT_ID   = howlaisiEnv.getCommitId() // 提交ID
                     env.COMMIT_USER = howlaisiEnv.getCommitUser() // 提交者
                     env.COMMIT_TIME = howlaisiEnv.getCommitTime() // 提交时间
-                    env.COMMIT_INFO = showlaisiEnv.getCommitInfo() // 提交信息
+                    env.COMMIT_INFO = howlaisiEnv.getCommitInfo() // 提交信息
                 }
                 sh "du -h --max-depth=1"
             }
