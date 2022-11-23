@@ -38,18 +38,18 @@ pipeline {
     stages {
         stage("checkout代码") {
             steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: "${branch_name}"]],
-                    extensions: [[$class: 'CloneOption', depth: 1, noTags: false, reference: '', shallow: true]],
-                    userRemoteConfigs: [[credentialsId: 'opensource_id', url: "$APP_REPO"]]])
                 script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "${branch_name}"]],
+                        extensions: [[$class: 'CloneOption', depth: 1, noTags: false, reference: '', shallow: true]],
+                        userRemoteConfigs: [[credentialsId: 'opensource_id', url: "$APP_REPO"]]])
+
                      // 定义全局变量
                     env.COMMIT_ID   = howlaisiEnv.getCommitId() // 提交ID
-                    env.COMMIT_USER = sh(script: 'git log --pretty=format:%an', returnStdout: true).trim() // 提交者
-                    env.COMMIT_TIME = sh(script: 'git log --pretty=format:%ai', returnStdout: true).trim() // 提交时间
-                    env.COMMIT_INFO = sh(script: 'git log --pretty=format:%s',  returnStdout: true).trim() // 提交信息
-                    env._VERSION = sh(script: "echo `date '+%Y%m%d%H%M%S'`" + "_${COMMIT_ID}" + "_${env.BUILD_ID}", returnStdout: true).trim() // 对应构建的版本 时间+commitID+buildID
+                    env.COMMIT_USER = howlaisiEnv.getCommitUser() // 提交者
+                    env.COMMIT_TIME = howlaisiEnv.getCommitTime() // 提交时间
+                    env.COMMIT_INFO = showlaisiEnv.getCommitInfo() // 提交信息
                 }
                 sh "du -h --max-depth=1"
             }
