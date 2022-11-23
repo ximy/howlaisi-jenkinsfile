@@ -36,6 +36,19 @@ pipeline {
     }
 
     stages {
+        stage("checkout代码") {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "${branch_name}"]],
+                    extensions: [[$class: 'CloneOption', depth: 1, noTags: false, reference: '', shallow: true]],
+                    userRemoteConfigs: [[credentialsId: 'opensource_id', url: "$APP_REPO"]]])
+                script {
+                    env.GIT_COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                }
+                sh "du -h --max-depth=1"
+            }
+        }
         stage ("打印相关变量") {
             steps{
                 echo "docker_hub_namespace信息为: ${docker_hub_namespace}"
@@ -50,19 +63,6 @@ pipeline {
                     echo "local_tag信息为：${env.local_tag}"
                     echo "remote_tag信息为：${env.remote_tag}"
                 }
-            }
-        }
-        stage("checkout代码") {
-            steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: "${branch_name}"]],
-                    extensions: [[$class: 'CloneOption', depth: 1, noTags: false, reference: '', shallow: true]],
-                    userRemoteConfigs: [[credentialsId: 'opensource_id', url: "$APP_REPO"]]])
-                script {
-                    env.GIT_COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-                }
-                sh "du -h --max-depth=1"
             }
         }
         stage("打包镜像") {
