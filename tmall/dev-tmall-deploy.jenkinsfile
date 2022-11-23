@@ -45,8 +45,7 @@ pipeline {
                     userRemoteConfigs: [[credentialsId: 'opensource_id', url: "$APP_REPO"]]])
                 script {
                      // 定义全局变量
-                    env.PULL_TIME = sh(script: "echo `date +'%Y-%m-%d %H:%M:%S'`", returnStdout: true).trim() // 获取时间
-                    env.COMMIT_ID   = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim() // 提交ID
+                    env.COMMIT_ID   = howlaisiEnv.getCommitId() // 提交ID
                     env.COMMIT_USER = sh(script: 'git log --pretty=format:%an', returnStdout: true).trim() // 提交者
                     env.COMMIT_TIME = sh(script: 'git log --pretty=format:%ai', returnStdout: true).trim() // 提交时间
                     env.COMMIT_INFO = sh(script: 'git log --pretty=format:%s',  returnStdout: true).trim() // 提交信息
