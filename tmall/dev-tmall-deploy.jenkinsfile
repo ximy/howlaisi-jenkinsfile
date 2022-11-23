@@ -46,7 +46,7 @@ pipeline {
                 script {
                      // 定义全局变量
                     env.PULL_TIME = sh(script: "echo `date +'%Y-%m-%d %H:%M:%S'`", returnStdout: true).trim() // 获取时间
-                    env.COMMIT_ID   = sh(script: 'git log --pretty=format:%h',  returnStdout: true).trim() // 提交ID
+                    env.COMMIT_ID   = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim() // 提交ID
                     env.COMMIT_USER = sh(script: 'git log --pretty=format:%an', returnStdout: true).trim() // 提交者
                     env.COMMIT_TIME = sh(script: 'git log --pretty=format:%ai', returnStdout: true).trim() // 提交时间
                     env.COMMIT_INFO = sh(script: 'git log --pretty=format:%s',  returnStdout: true).trim() // 提交信息
@@ -71,39 +71,37 @@ pipeline {
                 }
             }
         }
+        stage("打包镜像") {
+            steps {
+                script {
+                    container ('maven') {
+                        sh "mvn clean package -Dmaven.test.skip=true"
+                        sh "docker build -t ${env.local_tag} -f ./Dockerfile ."
+                        withCredentials([usernamePassword(credentialsId: "${docker_hub_id}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                            sh 'echo "$DOCKER_PASSWORD" | docker login http://k8s-harbor:30002 -u "$DOCKER_USERNAME" --password-stdin'
+                            sh "docker tag ${env.local_tag} ${env.remote_tag}"
+                            sh "docker push  ${env.remote_tag}"
+                        }
+                    }
+                }
+            }
+        }
+        stage("自动部署至k8s") {
+            agent none
+            steps {
+                container ("maven") {
+                    // 这种方式启k8s是官方推荐的
+                    sh 'envsubst < deploy.yaml | kubectl apply -f -'
+                }
+            }
+        }
     }
-//         stage("打包镜像") {
-//             steps {
-//                 script {
-//                     container ('maven') {
-//                         sh "mvn clean package -Dmaven.test.skip=true"
-//                         sh "docker build -t ${env.local_tag} -f ./Dockerfile ."
-//                         withCredentials([usernamePassword(credentialsId: "${docker_hub_id}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-//                             sh 'echo "$DOCKER_PASSWORD" | docker login http://k8s-harbor:30002 -u "$DOCKER_USERNAME" --password-stdin'
-//                             sh "docker tag ${env.local_tag} ${env.remote_tag}"
-//                             sh "docker push  ${env.remote_tag}"
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//         stage("自动部署至k8s") {
-//             agent none
-//             steps {
-//                 container ("maven") {
-//                     // 这种方式启k8s是官方推荐的
-//                     sh 'envsubst < deploy.yaml | kubectl apply -f -'
-//                 }
-//             }
-//         }
-//     }
     post {
         always {
             wrap([$class: 'BuildUser']){
                 script{
-//                     buildName "#${BUILD_ID}-${BRANCH_NAME}-${BUILD_USER}" // 更改构建名称
                     currentBuild.description = "提交者: ${COMMIT_USER}" // 添加说明信息
-                    currentBuild.description += "\n提交ID: ${COMMIT_ID}" // 添加说明信息
+                    currentBuild.description += "\nCOMMIT_ID: ${COMMIT_ID}" // 添加说明信息
                     currentBuild.description += "\n提交时间: ${COMMIT_TIME}" // 添加说明信息
                     currentBuild.description += "\n提交内容: ${COMMIT_INFO}" // 添加说明信息
                 }
