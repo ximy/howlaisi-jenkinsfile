@@ -91,20 +91,20 @@ pipeline {
             }
         }
     }
-//     post {
-//         always {
-//             wrap([$class: 'BuildUser']){
-//                 script{
-//                     buildName "#${BUILD_ID}-${BRANCH_NAME}-${BUILD_USER}" // 更改构建名称
-//                     currentBuild.description = "提交者: ${COMMIT_USER}" // 添加说明信息
-//                     currentBuild.description += "\n构建主机: ${REMOTE_HOST}" // 添加说明信息
-//                     currentBuild.description += "\n提交ID: ${COMMIT_ID}" // 添加说明信息
-//                     currentBuild.description += "\n提交时间: ${COMMIT_TIME}" // 添加说明信息
-//                     currentBuild.description += "\n提交内容: ${COMMIT_INFO}" // 添加说明信息
-//                 }
-//                 sh "printenv"
-//                 }
-//             }
-//         }
-//     }
+    post {
+        always {
+            wrap([$class: 'BuildUser']){
+                script{
+                    buildName "#${BUILD_ID}-${BRANCH_NAME}-${BUILD_USER}" // 更改构建名称
+                    currentBuild.description = "提交者: ${COMMIT_USER}" // 添加说明信息
+                    currentBuild.description += "\n构建主机: ${REMOTE_HOST}" // 添加说明信息
+                    currentBuild.description += "\n提交ID: ${COMMIT_ID}" // 添加说明信息
+                    currentBuild.description += "\n提交时间: ${COMMIT_TIME}" // 添加说明信息
+                    currentBuild.description += "\n提交内容: ${COMMIT_INFO}" // 添加说明信息
+                }
+                sh "printenv"
+                }
+            }
+        }
+    }
 }
