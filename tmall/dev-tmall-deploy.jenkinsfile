@@ -94,10 +94,27 @@ pipeline {
         always {
             script{
                 // 打印commit信息至jenkins历史记录
-                // buildInfo.printBuildInfo("$env.COMMIT_USER", "$env.COMMIT_ID", "$env.COMMIT_TIME", "$env.COMMIT_INFO")
                 howlaisiBuildInfo.printBuildInfo(COMMIT_USER, COMMIT_ID, COMMIT_TIME, COMMIT_INFO)
             }
             sh "printenv"
+        }
+        success {
+            script {
+                // 构建成功发送通知
+                wecom.sendTextMsg("13980797589","这是构建成功结果通知")
+            }
+        }
+        failure {
+            script {
+                // 构建成功发送通知
+                wecom.sendTextMsg("13980797589","这是构建失败结果通知")
+            }
+        }
+        aborted {
+            script {
+                // 构建成功发送通知
+                wecom.sendTextMsg("13980797589","这是构建被终止结果通知")
+            }
         }
     }
 }
