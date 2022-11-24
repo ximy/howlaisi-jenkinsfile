@@ -91,8 +91,10 @@ pipeline {
     }
     post {
         always {
-            // 打印commit信息至jenkins历史记录
-            buildInfo.printBuildInfo("$env.COMMIT_USER", "$env.COMMIT_ID", "$env.COMMIT_TIME", "$env.COMMIT_INFO",)
+            script{
+                // 打印commit信息至jenkins历史记录
+                buildInfo.printBuildInfo("$env.COMMIT_USER", "$env.COMMIT_ID", "$env.COMMIT_TIME", "$env.COMMIT_INFO")
+            }
             sh "printenv"
         }
     }
