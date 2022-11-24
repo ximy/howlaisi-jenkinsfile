@@ -84,7 +84,6 @@ pipeline {
         stage("自动部署至k8s") {
             steps {
                 container ("maven") {
-                    // 这种方式启k8s是官方推荐的
                     sh 'envsubst < deploy.yaml | kubectl apply -f -'
                 }
             }
