@@ -41,8 +41,8 @@ pipeline {
                 script {
                     gt.checkout(APP_REPO, branch_name, "opensource_id")
                      // 定义全局变量
-                    env.COMMIT_ID   = commitEnv.getCommitId() // 提交ID
                     env.COMMIT_USER = commitEnv.getCommitUser() // 提交者
+                    env.COMMIT_ID   = commitEnv.getCommitId() // 提交ID
                     env.COMMIT_TIME = commitEnv.getCommitTime() // 提交时间
                     env.COMMIT_INFO = commitEnv.getCommitInfo() // 提交信息
                 }
@@ -91,15 +91,9 @@ pipeline {
     }
     post {
         always {
-            wrap([$class: 'BuildUser']){
-                script{
-                    currentBuild.description = "提交者: ${COMMIT_USER}" // 添加说明信息
-                    currentBuild.description += "\nCOMMIT_ID: ${COMMIT_ID}" // 添加说明信息
-                    currentBuild.description += "\n提交时间: ${COMMIT_TIME}" // 添加说明信息
-                    currentBuild.description += "\n提交内容: ${COMMIT_INFO}" // 添加说明信息
-                }
-                sh "printenv"
-            }
+            // 打印commit信息至jenkins历史记录
+            buildInfo.printBuildInfo("$env.COMMIT_USER", "$env.COMMIT_ID", "$env.COMMIT_TIME", "$env.COMMIT_INFO",)
+            sh "printenv"
         }
     }
 }
