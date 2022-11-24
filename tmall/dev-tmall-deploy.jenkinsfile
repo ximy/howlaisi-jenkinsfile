@@ -94,7 +94,7 @@ pipeline {
             script{
                 // 打印commit信息至jenkins历史记录
                 // buildInfo.printBuildInfo("$env.COMMIT_USER", "$env.COMMIT_ID", "$env.COMMIT_TIME", "$env.COMMIT_INFO")
-                buildInfo.printBuildInfo(COMMIT_USER, COMMIT_ID, COMMIT_TIME, COMMIT_INFO)
+                howlaisiBuildInfo.printBuildInfo(COMMIT_USER, COMMIT_ID, COMMIT_TIME, COMMIT_INFO)
             }
             sh "printenv"
         }
