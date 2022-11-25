@@ -1,4 +1,4 @@
-// 提交流水线pipeline webhook http://jenkins.howlaisi.com:30180/generic-webhook-trigger/invoke?token=sonar-tmall&urlParam=urlParamValue
+// 提交流水线pipeline webhook xp://jenkins.howlaisi.com:30180/generic-webhook-trigger/invoke?token=sonar-tmall&urlParam=urlParamValue
 
 @Library('howlaisi-shared-library@master') _
 
@@ -36,7 +36,7 @@ pipeline {
         // 由于外网速度慢，我使用的内网网址，因此此网址是访问不到的，其对应到的地址是：
         // http://gitlab.howlaisi.com:32058/opensource/tmall.git
         APP_REPO = "http://gitlab-node.infrastructure:32058/opensource/tmall.git"
-        TRIGGER_BRANCH_NAME = "test"
+        TRIGGER_BRANCH_NAME = ""
     }
     stages {
         stage("计算分支") {
