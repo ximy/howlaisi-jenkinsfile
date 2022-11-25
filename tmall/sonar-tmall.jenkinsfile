@@ -64,7 +64,7 @@ pipeline {
             steps {
                 container('maven') {
                     script {
-                        env.sonarProjectName = tools.getSonarProjectName(APP_REPO, BRANCH_NAME, "frontend")
+                        env.sonarProjectName = tools.getSonarProjectName(APP_REPO, BRANCH_NAME, "backend")
                         withSonarQubeEnv('sonar') {
                             sh 'ls -al'
                             sh "mvn clean package sonar:sonar -Dsonar.projectName=${sonarProjectName} -Dsonar.projectKey=${sonarProjectName} -f pom.xml"
