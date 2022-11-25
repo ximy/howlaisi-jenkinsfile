@@ -43,12 +43,14 @@ pipeline {
                 script {
                     sh "echo $PARAM_BRANCH_NAME"
                     env.BRANCH_NAME = gt.chooseBranchName(TRIGGER_BRANCH_NAME, PARAM_BRANCH_NAME)
+                    sh "echo 计算分支：$BRANCH_NAME"
                 }
             }
         }
         stage("checkout代码") {
             steps {
                 script {
+                    sh "echo checkout代码 $BRANCH_NAME"
                     gt.checkout(APP_REPO, BRANCH_NAME, "opensource_id")
                      // 定义全局变量
                     env.COMMIT_USER = commitEnv.getCommitUser() // 提交者
