@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script {
                     sh "echo $PARAM_BRANCH_NAME"
-                    env.BRANCH_NAME = gt.chooseBranchName(TRIGGER_BRANCH_NAME, PARAM_BRANCH_NAME)
+                    env.BRANCH_NAME = gt.chooseBranchName("aaaaaaaaaa", "master")
                     sh "echo 计算分支：$BRANCH_NAME"
                 }
             }
