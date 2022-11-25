@@ -48,7 +48,7 @@ pipeline {
         stage("checkout代码") {
             steps {
                 script {
-                    gt.checkout(APP_REPO, branch_name, "opensource_id")
+                    gt.checkout(APP_REPO, BRANCH_NAME, "opensource_id")
                      // 定义全局变量
                     env.COMMIT_USER = commitEnv.getCommitUser() // 提交者
                     env.COMMIT_ID   = commitEnv.getCommitId() // 提交ID
