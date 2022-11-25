@@ -41,18 +41,19 @@ pipeline {
         stage("计算分支") {
             steps {
                 script {
-                    try {
-                        println("计算分支...")
-                        println("PARAM_BRANCH_NAME是: $PARAM_BRANCH_NAME")
-                        env.BRANCH_NAME = PARAM_BRANCH_NAME
-                        println("TRIGGER_BRANCH_NAME是： $TRIGGER_BRANCH_NAME")
-                        env.BRANCH_NAME = TRIGGER_BRANCH_NAME
-                    } catch (error) {
-                        println("捕获到了异常：")
-                        println("继续往下执行。。。" + error)
-                    } finally{
-                        println("BRANCH_NAME是： $BRANCH_NAME")
-                    }
+//                     try {
+//                         println("计算分支...")
+//                         println("PARAM_BRANCH_NAME是: $PARAM_BRANCH_NAME")
+//                         env.BRANCH_NAME = PARAM_BRANCH_NAME
+//                         println("TRIGGER_BRANCH_NAME是： $TRIGGER_BRANCH_NAME")
+//                         env.BRANCH_NAME = TRIGGER_BRANCH_NAME
+//                     } catch (error) {
+//                         println("捕获到了异常：")
+//                         println("继续往下执行。。。" + error)
+//                     } finally{
+//                         println("BRANCH_NAME是： $BRANCH_NAME")
+//                     }
+                    gt.chooseBranchName()
                 }
             }
         }
@@ -99,7 +100,6 @@ pipeline {
             }
         }
     }
-
     post {
         always {
             script{
