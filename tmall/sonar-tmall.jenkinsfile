@@ -45,10 +45,10 @@ pipeline {
                 }
             }
         }
-        stage("checkout代码") {
+        stage("下载代码") {
             steps {
                 script {
-                    sh "echo checkout代码 $BRANCH_NAME"
+                    sh "echo 下载代码 $BRANCH_NAME"
                     gt.checkout(APP_REPO, BRANCH_NAME, "opensource_id")
                      // 定义全局变量
                     env.COMMIT_USER = commitEnv.getCommitUser() // 提交者
