@@ -93,6 +93,7 @@ pipeline {
             script{
                 // 打印commit信息至jenkins历史记录
                 howlaisiBuildInfo.printBuildInfo(COMMIT_USER, COMMIT_ID, COMMIT_TIME, COMMIT_INFO)
+                wecom.sendTextMsg("13980797589",currentBuild.description)
             }
             sh "printenv"
         }
