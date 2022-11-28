@@ -24,7 +24,7 @@ pipeline {
     }
     environment {
         SOURCE_REPO_URL = 'http://gitlab.howlaisi.com:32058/opensource/howlaisi-jenkinsfile.git'
-        TARGET_REPO_URL = 'https://github.com/ximy/howlaisi-jenkinsfile.git'
+        TARGET_REPO_URL = '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@github.com/ximy/howlaisi-jenkinsfile.git'
     }
 
     stages {
