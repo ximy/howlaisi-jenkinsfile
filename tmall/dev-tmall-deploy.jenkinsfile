@@ -46,6 +46,7 @@ pipeline {
                     env.COMMIT_ID   = commitEnv.getCommitId() // 提交ID
                     env.COMMIT_TIME = commitEnv.getCommitTime() // 提交时间
                     env.COMMIT_INFO = commitEnv.getCommitInfo() // 提交信息
+                    env.JENKINS_BUILD_URL = tools.getJenkinsBuildUrl()
                 }
                 sh "du -h --max-depth=1"
             }
@@ -93,7 +94,7 @@ pipeline {
         always {
             script{
                 // 打印commit信息至jenkins历史记录
-                howlaisiBuildInfo.printBuildInfo(COMMIT_USER, COMMIT_ID, COMMIT_TIME, COMMIT_INFO)
+                howlaisiBuildInfo.printBuildInfo(COMMIT_USER, COMMIT_ID, COMMIT_TIME, COMMIT_INFO, JENKINS_BUILD_URL)
             }
             sh "printenv"
         }
