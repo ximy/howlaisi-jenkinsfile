@@ -40,11 +40,11 @@ pipeline {
 					sh "git branch"
 					// 凭证id是指这个凭证的id，从凭证id这个凭证中取出值，赋给变量bianliangA和bianliangB，
 					withCredentials([usernamePassword(credentialsId: 'github_ximy_password', passwordVariable: 'ximy_password', usernameVariable: 'ximy_user')]) {
-						sh "echo 'https://$ximy_user:$ximy_password@github.com' >> /root/.git-credentials"
+						sh "echo 'https://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@github.com' >> /root/.git-credentials"
 					}
 
 					// 配置不输入密码
-					sh "git config --global credential.helper store"
+					//sh "git config --global credential.helper store"
                     // checkout所有的分支用于传输
 					sh 'git branch -r | grep -v \'\\->\' | while read remote; do echo ${remote} && git branch --track "${remote#origin/}" "$remote"; done || true'
 					// 以下的代码是创建仓库就会有的
