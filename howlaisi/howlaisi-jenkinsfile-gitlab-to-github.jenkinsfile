@@ -40,7 +40,7 @@ pipeline {
 					sh "git branch"
 					//sh "git config --global http.proxy http://127.0.0.1:1080"
                     //sh "git config --global https.proxy https://127.0.0.1:1080"
-                    sh "git config --global http.https://github.com.proxy socks5://127.0.0.1:1080"
+                        //sh "git config --global http.https://github.com.proxy socks5://127.0.0.1:1080"
 
                     //sh "git config --global --unset http.proxy"
                     //sh "git config --global --unset https.proxy"
@@ -62,7 +62,7 @@ pipeline {
 					sh "git remote set-url origin https://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@github.com/ximy/howlaisi-jenkinsfile.git"
 
 					sh "git config -l"
-					sh "git push -u origin --all --force"
+					sh "git push -u origin --all"
 // 					sh "git push -u origin --tags --force"
                 }
             }
