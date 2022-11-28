@@ -38,12 +38,12 @@ pipeline {
             steps {
                 container('maven') {
 					sh "git branch"
-					sh "git config --global http.proxy http://127.0.0.1:1080"
-                    sh "git config --global https.proxy https://127.0.0.1:1080"
+					//sh "git config --global http.proxy http://127.0.0.1:1080"
+                    //sh "git config --global https.proxy https://127.0.0.1:1080"
                     sh "git config --global http.https://github.com.proxy socks5://127.0.0.1:1080"
 
-                    sh "git config --global --unset http.proxy"
-                    sh "git config --global --unset https.proxy"
+                    //sh "git config --global --unset http.proxy"
+                    //sh "git config --global --unset https.proxy"
 
 					// 凭证id是指这个凭证的id，从凭证id这个凭证中取出值，赋给变量bianliangA和bianliangB，
 // 					withCredentials([usernamePassword(credentialsId: 'github_ximy_password', passwordVariable: 'ximy_password', usernameVariable: 'ximy_user')]) {
