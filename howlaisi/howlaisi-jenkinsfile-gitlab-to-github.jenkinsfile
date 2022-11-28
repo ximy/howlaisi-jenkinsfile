@@ -53,6 +53,7 @@ pipeline {
 					// 配置不输入密码
 					//sh "git config --global credential.helper store"
                     // checkout所有的分支用于传输
+                    sh "git config --global push.default simple"
 					sh 'git branch -r | grep -v \'\\->\' | while read remote; do echo ${remote} && git branch --track "${remote#origin/}" "$remote"; done || true'
 					// 以下的代码是创建仓库就会有的
 					sh "git remote rename origin old-origin"
