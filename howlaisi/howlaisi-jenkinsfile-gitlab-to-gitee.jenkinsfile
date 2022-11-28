@@ -1,0 +1,59 @@
+// webhook        http://jenkins.howlaisi.com:30180/generic-webhook-trigger/invoke?token=howlaisi-jenkinsfile-gitlab-to-gitee
+pipeline {
+    agent {
+        node {
+            label 'maven'
+        }
+    }
+
+    triggers {     // 这个需要插件支撑，插件是：Generic Webhook Trigger
+        GenericTrigger(
+            genericVariables: [
+                [
+                    key: 'BRANCH_NAME',
+                    value: '$.ref',
+                    regexpFilter : 'refs\\/heads\\/',
+                    defaultValue: 'master'
+                ], // 这一段的作用是：从webhook中取ref的值，经过regexpFilter的过滤（\转义），过滤后的值交给BRANCH_NAME变量，默认值是master
+            ],
+            token: 'howlaisi-jenkinsfile-gitlab-to-gitee',
+            causeString: ' Triggered',
+            printContributedVariables: true,
+            printPostContent: true,
+        )
+    }
+    environment {
+        SOURCE_REPO_URL = 'http://gitlab.howlaisi.com:32058/opensource/howlaisi-jenkinsfile.git'
+        TARGET_REPO_URL = 'https://gitee.com/ximy/howlaisi-jenkinsfile.git'
+    }
+
+    stages {
+        stage('checkout source代码') {
+            steps {
+                git(url: "$SOURCE_REPO_URL", credentialsId: 'opensource_id', branch: "master")
+            }
+        }
+
+        stage("处理git,使他可以自动提交") {
+            steps {
+                container('maven') {
+					sh "git branch"
+					// 凭证id是指这个凭证的id，从凭证id这个凭证中取出值，赋给变量bianliangA和bianliangB，
+					withCredentials([usernamePassword(credentialsId: 'gitee_ximy_password', passwordVariable: 'ximy_password', usernameVariable: 'ximy_user')]) {
+						sh "echo 'https://$ximy_user:$ximy_password@gitee.com' >> /root/.git-credentials"
+					}
+
+					// 配置不输入密码
+					sh "git config --global credential.helper store"
+                    // checkout所有的分支用于传输
+					sh 'git branch -r | grep -v \'\\->\' | while read remote; do echo ${remote} && git branch --track "${remote#origin/}" "$remote"; done || true'
+					// 以下的代码是创建仓库就会有的
+					sh "git remote rename origin old-origin"
+					sh "git remote add origin $TARGET_REPO_URL"
+					sh "git push -u origin --all --force"
+					sh "git push -u origin --tags --force"
+                }
+            }
+        }
+    }
+}
