@@ -62,7 +62,7 @@ pipeline {
 					sh "git remote set-url origin https://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@github.com/ximy/howlaisi-jenkinsfile.git"
 
 					sh "git config -l"
-					sh "git push -u origin --all"
+					sh "git push -u origin --all --force"
 // 					sh "git push -u origin --tags --force"
                 }
             }
