@@ -1,4 +1,4 @@
-// webhook        http://jenkins.howlaisi.com:30180/generic-webhook-trigger/invoke?token=howlaisi-jenkinsfile-gitlab-to-gitee
+// webhook        http://jenkins.howlaisi.com:30180/generic-webhook-trigger/invoke?token=howlaisi-jenkinsfile-gitlab-to-github
 pipeline {
     agent {
         node {
@@ -16,7 +16,7 @@ pipeline {
                     defaultValue: 'master'
                 ], // 这一段的作用是：从webhook中取ref的值，经过regexpFilter的过滤（\转义），过滤后的值交给BRANCH_NAME变量，默认值是master
             ],
-            token: 'howlaisi-jenkinsfile-gitlab-to-gitee',
+            token: 'howlaisi-jenkinsfile-gitlab-to-github',
             causeString: ' Triggered',
             printContributedVariables: true,
             printPostContent: true,
@@ -38,7 +38,13 @@ pipeline {
             steps {
                 container('maven') {
 					sh "git branch"
-					sh "git config --global http.https://github.com.proxy socks5://127.0.0.1:1080"
+					sh "git config --global http.proxy http://127.0.0.1:1080"
+                    sh "git config --global https.proxy https://127.0.0.1:1080"
+                    sh "git config --global http.https://github.com.proxy socks5://127.0.0.1:1080"
+
+                    sh "git config --global --unset http.proxy"
+                    sh "git config --global --unset https.proxy"
+
 					// 凭证id是指这个凭证的id，从凭证id这个凭证中取出值，赋给变量bianliangA和bianliangB，
 // 					withCredentials([usernamePassword(credentialsId: 'github_ximy_password', passwordVariable: 'ximy_password', usernameVariable: 'ximy_user')]) {
 // 						sh "echo 'https://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@github.com' >> /root/.git-credentials"
@@ -51,6 +57,9 @@ pipeline {
 					// 以下的代码是创建仓库就会有的
 					sh "git remote rename origin old-origin"
 					sh "git remote add origin $TARGET_REPO_URL"
+
+					sh "git remote set-url origin https://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@github.com/ximy/howlaisi-jenkinsfile.git"
+
 					sh "git config -l"
 					sh "git push -u origin --all --force"
 // 					sh "git push -u origin --tags --force"
