@@ -40,7 +40,7 @@ pipeline {
 					sh "git branch"
 					// 凭证id是指这个凭证的id，从凭证id这个凭证中取出值，赋给变量bianliangA和bianliangB，
 					withCredentials([usernamePassword(credentialsId: 'github_ximy_password', passwordVariable: 'ximy_password', usernameVariable: 'ximy_user')]) {
-						sh "echo 'https://$ximy_user:$ximy_password@gitee.com' >> /root/.git-credentials"
+						sh "echo 'https://$ximy_user:$ximy_password@github.com' >> /root/.git-credentials"
 					}
 
 					// 配置不输入密码
